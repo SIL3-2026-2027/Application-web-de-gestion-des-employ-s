@@ -68,17 +68,6 @@ class User extends Authenticatable
         return $this->hasOne(Employee::class);
     }
 
-    /** Adresse de la photo que l'utilisateur a choisie lui-même (null sinon). Elle change à chaque nouvelle photo. */
-    public function ownAvatarUrl(): ?string
-    {
-        return $this->avatar_path ? "/api/v1/users/{$this->id}/avatar?v=".substr(md5($this->avatar_path), 0, 8) : null;
-    }
-
-    /** Photo affichée : celle de l'utilisateur, à défaut celle que les RH ont mise sur son dossier. */
-    public function avatarUrl(): ?string
-    {
-        return $this->ownAvatarUrl() ?? $this->employee?->photoUrl();
-    }
 
     /** NOT-05 : e-mail activé par défaut, sauf si l'utilisateur l'a désactivé pour cette catégorie. */
     public function wantsEmailFor(string $category): bool

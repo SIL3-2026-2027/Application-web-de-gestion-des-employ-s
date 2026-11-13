@@ -20,7 +20,7 @@ use Symfony\Component\HttpFoundation\StreamedResponse;
 
 class LeaveRequestController extends Controller
 {
-    private const RELATIONS = ['employee.user:id,avatar_path', 'leaveType', 'creator', 'managerDecider', 'hrDecider'];
+    private const RELATIONS = ['employee', 'leaveType', 'creator', 'managerDecider', 'hrDecider'];
 
     public function __construct(private readonly LeaveRequestService $service) {}
 
@@ -130,9 +130,8 @@ class LeaveRequestController extends Controller
             ->visibleTo($request->user())
             ->where('status', '!=', 'sorti')
             ->when($data['department_id'] ?? null, fn ($q, $v) => $q->where('department_id', $v))
-            ->with('user:id,avatar_path')
             ->orderBy('last_name')
-            ->get(['id', 'first_name', 'last_name', 'department_id', 'user_id', 'photo_path']);
+            ->get(['id', 'first_name', 'last_name', 'department_id']);
 
         $leaves = LeaveRequest::query()
             ->with('leaveType:id,name,color,code')
@@ -143,7 +142,7 @@ class LeaveRequestController extends Controller
 
         return [
             'month' => $data['month'],
-            'employees' => $employees->map(fn (Employee $e) => ['id' => $e->id, 'full_name' => $e->full_name, 'avatar_url' => $e->avatarUrl()]),
+            'employees' => $employees->map(fn (Employee $e) => ['id' => $e->id, 'full_name' => $e->full_name]),
             'holidays' => PublicHoliday::query()
                 ->whereBetween('date', [$start->toDateString(), $end->toDateString()])
                 ->get()

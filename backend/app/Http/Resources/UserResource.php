@@ -17,8 +17,6 @@ class UserResource extends JsonResource
             'id' => $this->id,
             'name' => $this->name,
             'email' => $this->email,
-            'avatar_url' => $this->avatarUrl(),
-            'has_own_avatar' => $this->avatar_path !== null,
             'is_active' => $this->is_active,
             'must_change_password' => $this->must_change_password,
             'roles' => $this->getRoleNames(),
