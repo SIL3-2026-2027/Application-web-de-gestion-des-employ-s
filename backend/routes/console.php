@@ -7,6 +7,7 @@ use App\Notifications\ContractDeadline;
 use App\Notifications\SimpleNotification;
 use App\Services\AttendanceService;
 use App\Services\ContractService;
+use App\Services\EvaluationService;
 use Illuminate\Foundation\Inspiring;
 use Illuminate\Support\Facades\Artisan;
 use Illuminate\Support\Facades\Notification;
@@ -117,6 +118,12 @@ Artisan::command('attendance:anomalies {type : absences ou sorties}', function (
     $this->info(count($byRecipient).' destinataire(s) prévenu(s).');
 })->purpose('Signale les absences non justifiées et les départs non pointés');
 
+// EVA-07 : relance des entretiens qui approchent de leur échéance ou sont en retard
+Artisan::command('evaluations:reminders', function (EvaluationService $evaluations) {
+    $this->info($evaluations->remind().' entretien(s) relancé(s).');
+})->purpose('Relance employés et managers dont l’entretien approche de son échéance');
+
+Schedule::command('evaluations:reminders')->weekdays()->at('08:00');
 Schedule::command('attendance:anomalies absences')->weekdays()->at('10:30');
 Schedule::command('attendance:anomalies sorties')->dailyAt('21:00');
 Schedule::command('contracts:apply-due')->dailyAt('00:30');
