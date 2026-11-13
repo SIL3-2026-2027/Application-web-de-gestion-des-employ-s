@@ -2,7 +2,6 @@
 
 use App\Http\Controllers\Api\AttendanceController;
 use App\Http\Controllers\Api\AuthController;
-use App\Http\Controllers\Api\AvatarController;
 use App\Http\Controllers\Api\CompanyDocumentController;
 use App\Http\Controllers\Api\ContractController;
 use App\Http\Controllers\Api\DashboardController;
@@ -10,9 +9,6 @@ use App\Http\Controllers\Api\DocumentController;
 use App\Http\Controllers\Api\DocumentRequestController;
 use App\Http\Controllers\Api\EmployeeController;
 use App\Http\Controllers\Api\EmployeeImportController;
-use App\Http\Controllers\Api\EvaluationCampaignController;
-use App\Http\Controllers\Api\EvaluationController;
-use App\Http\Controllers\Api\IndicatorController;
 use App\Http\Controllers\Api\LeaveBalanceController;
 use App\Http\Controllers\Api\LeaveRequestController;
 use App\Http\Controllers\Api\LeaveSettingsController;
@@ -38,16 +34,7 @@ Route::prefix('v1')->group(function () {
         Route::get('me', [AuthController::class, 'me']);
         Route::put('me/password', [PasswordController::class, 'change']);
 
-        // Photo de profil
-        Route::post('me/avatar', [AvatarController::class, 'store']);
-        Route::delete('me/avatar', [AvatarController::class, 'destroy']);
-        Route::get('users/{user}/avatar', [AvatarController::class, 'show']);
-        Route::get('employees/{employee}/photo', [AvatarController::class, 'showForEmployee']);
-        Route::post('employees/{employee}/photo', [AvatarController::class, 'storeForEmployee']);
-        Route::delete('employees/{employee}/photo', [AvatarController::class, 'destroyForEmployee']);
-
         Route::get('dashboard', DashboardController::class);
-        Route::get('indicators', IndicatorController::class)->middleware('role:super-admin|rh|direction');
 
         // Notifications
         Route::get('notifications', [NotificationController::class, 'index']);
@@ -105,24 +92,6 @@ Route::prefix('v1')->group(function () {
         Route::get('company-documents/{companyDocument}/download', [CompanyDocumentController::class, 'download']);
         Route::post('company-documents/{companyDocument}/acknowledge', [CompanyDocumentController::class, 'acknowledge']);
 
-        // Entretiens d'évaluation et objectifs (EVA)
-        Route::get('evaluations', [EvaluationController::class, 'index']);
-        Route::get('evaluations/{evaluation}', [EvaluationController::class, 'show']);
-        Route::put('evaluations/{evaluation}/self', [EvaluationController::class, 'saveSelf']);
-        Route::put('evaluations/{evaluation}/manager', [EvaluationController::class, 'saveManager']);
-        Route::post('evaluations/{evaluation}/sign', [EvaluationController::class, 'sign']);
-        Route::get('evaluations/{evaluation}/pdf', [EvaluationController::class, 'pdf']);
-        Route::get('employees/{employee}/evaluations', [EvaluationController::class, 'forEmployee']);
-        Route::get('objectives', [EvaluationController::class, 'objectives']);
-        Route::post('employees/{employee}/objectives', [EvaluationController::class, 'storeObjective']);
-        Route::put('objectives/{objective}', [EvaluationController::class, 'updateObjective']);
-        Route::delete('objectives/{objective}', [EvaluationController::class, 'destroyObjective']);
-        Route::middleware('role:super-admin|rh|direction')->group(function () {
-            Route::get('evaluation-campaigns', [EvaluationCampaignController::class, 'index']);
-            Route::get('evaluation-campaigns/{campaign}', [EvaluationCampaignController::class, 'show']);
-            Route::get('evaluation-templates', [EvaluationCampaignController::class, 'templates']);
-        });
-
         // Congés et absences
         Route::get('leave-types', [LeaveSettingsController::class, 'types']);
         Route::get('public-holidays', [LeaveSettingsController::class, 'holidays']);
@@ -151,17 +120,6 @@ Route::prefix('v1')->group(function () {
             Route::put('users/{user}/password', [UserController::class, 'setPassword']);
             Route::post('users/{user}/activate', [UserController::class, 'activate']);
             Route::post('users/{user}/deactivate', [UserController::class, 'deactivate']);
-
-            // Campagnes et modèles d'évaluation
-            Route::post('evaluation-templates', [EvaluationCampaignController::class, 'storeTemplate']);
-            Route::put('evaluation-templates/{template}', [EvaluationCampaignController::class, 'updateTemplate']);
-            Route::delete('evaluation-templates/{template}', [EvaluationCampaignController::class, 'destroyTemplate']);
-            Route::post('evaluation-campaigns', [EvaluationCampaignController::class, 'store']);
-            Route::put('evaluation-campaigns/{campaign}', [EvaluationCampaignController::class, 'update']);
-            Route::delete('evaluation-campaigns/{campaign}', [EvaluationCampaignController::class, 'destroy']);
-            Route::post('evaluation-campaigns/{campaign}/launch', [EvaluationCampaignController::class, 'launch']);
-            Route::post('evaluation-campaigns/{campaign}/close', [EvaluationCampaignController::class, 'close']);
-            Route::post('evaluation-campaigns/{campaign}/remind', [EvaluationCampaignController::class, 'remind']);
 
             // Paie
             Route::prefix('payroll')->group(function () {
