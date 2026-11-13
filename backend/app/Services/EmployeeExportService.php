@@ -23,7 +23,7 @@ class EmployeeExportService
 {
     private const STATUS = ['actif' => 'Actif', 'periode_essai' => "Période d'essai", 'suspendu' => 'Suspendu', 'sorti' => 'Sorti'];
 
-    /** Colonnes exportées : aucune donnée sensible (n° de sécurité sociale, IBAN, salaire). */
+    /** Colonnes exportées : aucune donnée sensible (n° CNSS, RIB, salaire). */
     private const HEADERS = [
         'Matricule', 'Civilité', 'Nom', 'Prénom', 'Date de naissance', 'E-mail professionnel', 'Téléphone',
         'Département', 'Poste', 'Site', 'Manager', 'Date d\'embauche', 'Contrat', 'Fin de contrat', 'Statut', 'Date de sortie',
@@ -53,14 +53,14 @@ class EmployeeExportService
         $writer->openToFile($path);
 
         $header = (new Style)->setFontBold()->setBackgroundColor('DEEAF6');
-        $text = (new Style)->setFormat('@'); // texte : garde les zéros de « 0612345678 » ou « 01000 »
+        $text = (new Style)->setFormat('@'); // texte : garde les zéros de « 0197123456 » ou « 01 BP 1234 »
 
         $writer->getCurrentSheet()->setName('Employés');
         $writer->addRow(Row::fromValues(array_values(EmployeeImportService::COLUMNS), $header));
         $example = [
-            '', 'Mme', 'Dupont', 'Marie', '15/03/1990', 'Lyon', 'Française', 'marie.dupont@entreprise.fr', '', '0612345678',
-            '12 rue des Lilas', '69003', 'Lyon', Department::value('code') ?? 'RH', Position::value('title') ?? 'Assistant', Site::value('name') ?? 'Siège',
-            '', '01/09/2024', 'actif', 'CDI', '', '35', '32000',
+            '', 'Mme', 'Adjovi', 'Reine', '15/03/1990', 'Abomey', 'Béninoise', 'reine.adjovi@entreprise.bj', '', '0197123456',
+            'Lot 512, quartier Fidjrossè', '03 BP 2210', 'Cotonou', Department::value('code') ?? 'RH', Position::value('title') ?? 'Assistant', Site::value('name') ?? 'Siège',
+            '', '01/09/2024', 'actif', 'CDI', '', '40', '250000',
         ];
         $writer->addRow(Row::fromValues($example, $text));
         $writer->getCurrentSheet()->setColumnWidth(22, ...range(1, count(EmployeeImportService::COLUMNS)));

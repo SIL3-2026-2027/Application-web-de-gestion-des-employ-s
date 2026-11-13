@@ -30,7 +30,7 @@ class EmployeeRequest extends FormRequest
             'birth_place' => ['nullable', 'string', 'max:100'],
             'nationality' => ['nullable', 'string', 'max:100'],
             'social_security_number' => ['nullable', 'string', 'max:30'],
-            'marital_status' => ['nullable', Rule::in(['celibataire', 'marie', 'pacse', 'divorce', 'veuf'])],
+            'marital_status' => ['nullable', Rule::in(['celibataire', 'marie', 'divorce', 'veuf'])],
             'children_count' => ['nullable', 'integer', 'min:0', 'max:30'],
 
             'personal_email' => ['nullable', 'email', 'max:150'],
@@ -41,7 +41,7 @@ class EmployeeRequest extends FormRequest
             'phone' => ['nullable', 'string', 'max:30'],
             'address' => ['nullable', 'string', 'max:255'],
             'city' => ['nullable', 'string', 'max:100'],
-            'postal_code' => ['nullable', 'string', 'max:10'],
+            'postal_code' => ['nullable', 'string', 'max:30'], // boîte postale (ex. 01 BP 1234)
             'emergency_contact_name' => ['nullable', 'string', 'max:150'],
             'emergency_contact_phone' => ['nullable', 'string', 'max:30'],
             'iban' => ['nullable', 'string', 'max:34'],

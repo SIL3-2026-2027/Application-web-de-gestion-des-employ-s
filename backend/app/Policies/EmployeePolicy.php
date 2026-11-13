@@ -23,7 +23,7 @@ class EmployeePolicy
         return $own && ($own->id === $employee->id || $employee->manager_id === $own->id);
     }
 
-    /** Données sensibles (n° de sécurité sociale, IBAN) : RH ou l'employé lui-même. */
+    /** Données sensibles (n° CNSS, RIB) : RH ou l'employé lui-même. */
     public function viewSensitive(User $user, Employee $employee): bool
     {
         return $user->isHr() || $user->employee?->id === $employee->id;

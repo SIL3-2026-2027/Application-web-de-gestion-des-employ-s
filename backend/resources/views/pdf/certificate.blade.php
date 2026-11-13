@@ -19,8 +19,8 @@
 
     <p>
         Je soussigné(e), {{ $company['representative'] }}, {{ $company['representative_title'] }} de la société
-        <strong>{{ $company['name'] }}</strong>, {{ $company['address'] }}, {{ $company['postal_code'] }} {{ $company['city'] }},
-        SIRET {{ $company['siret'] }}, certifie que :
+        <strong>{{ $company['name'] }}</strong>, {{ $company['address'] }}, {{ $company['postal_box'] }} {{ $company['city'] }} ({{ $company['country'] }}),
+        IFU {{ $company['ifu'] }}, RCCM {{ $company['rccm'] }}, certifie que :
     </p>
 
     <p style="text-align:center; font-size:12pt;">
@@ -42,8 +42,8 @@
     </p>
 
     <p class="muted">
-        Le salarié peut, s'il le souhaite, conserver le bénéfice de la portabilité de ses garanties de prévoyance
-        et de frais de santé dans les conditions prévues par la loi.
+        Certificat établi en application du Code du travail de la République du Bénin (loi n° 98-004 du 27 janvier 1998).
+        Il ne comporte aucune mention défavorable au salarié.
     </p>
 
     <p>Certificat délivré pour servir et valoir ce que de droit.</p>

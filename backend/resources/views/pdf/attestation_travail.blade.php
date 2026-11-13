@@ -14,8 +14,8 @@
 
     <p>
         Je soussigné(e), {{ $company['representative'] }}, {{ $company['representative_title'] }} de la société
-        <strong>{{ $company['name'] }}</strong>, {{ $company['address'] }}, {{ $company['postal_code'] }} {{ $company['city'] }},
-        SIRET {{ $company['siret'] }}, atteste que :
+        <strong>{{ $company['name'] }}</strong>, {{ $company['address'] }}, {{ $company['postal_box'] }} {{ $company['city'] }} ({{ $company['country'] }}),
+        IFU {{ $company['ifu'] }}, RCCM {{ $company['rccm'] }}, atteste que :
     </p>
 
     <p style="text-align:center; font-size:12pt;">

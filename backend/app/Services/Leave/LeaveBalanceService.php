@@ -63,7 +63,7 @@ class LeaveBalanceService
 
     /**
      * Droits acquis à date : acquisition mensuelle pour chaque mois terminé travaillé
-     * (ex. 2,08 j/mois), sinon forfait annuel. Plafonné aux droits annuels.
+     * (ex. 2 j/mois), sinon forfait annuel. Plafonné aux droits annuels.
      */
     public function accrued(LeaveType $type, Employee $employee, int $year, ?CarbonImmutable $today = null): float
     {

@@ -21,8 +21,8 @@ class DatabaseSeeder extends Seeder
             Role::findOrCreate($role, 'web');
         }
 
-        $siege = Site::create(['name' => 'Siège', 'city' => 'Paris', 'country' => 'FR']);
-        $agence = Site::create(['name' => 'Agence Lyon', 'city' => 'Lyon', 'country' => 'FR']);
+        $siege = Site::create(['name' => 'Siège', 'city' => 'Cotonou', 'country' => 'BJ']);
+        $agence = Site::create(['name' => 'Agence Parakou', 'city' => 'Parakou', 'country' => 'BJ']);
 
         $departments = collect([
             ['name' => 'Direction générale', 'code' => 'DG'],
@@ -37,8 +37,8 @@ class DatabaseSeeder extends Seeder
             ['title' => 'Responsable RH', 'category' => 'Cadre'],
             ['title' => 'Chef de projet', 'category' => 'Cadre'],
             ['title' => 'Développeur', 'category' => 'Cadre'],
-            ['title' => 'Commercial', 'category' => 'ETAM'],
-            ['title' => 'Comptable', 'category' => 'ETAM'],
+            ['title' => 'Commercial', 'category' => 'Agent de maîtrise'],
+            ['title' => 'Comptable', 'category' => 'Agent de maîtrise'],
             ['title' => 'Assistant administratif', 'category' => 'Employé'],
         ])->mapWithKeys(fn ($p) => [$p['title'] => Position::create($p)]);
 
@@ -63,10 +63,10 @@ class DatabaseSeeder extends Seeder
         User::create(['name' => 'Administrateur', 'email' => 'admin@entreprise.test', 'password' => 'password'])
             ->assignRole(User::ROLE_ADMIN);
 
-        $dg = $make(User::ROLE_DIRECTION, 'direction@entreprise.test', 'Claire', 'Martin', 'DG', 'Directeur général');
-        $rh = $make(User::ROLE_RH, 'rh@entreprise.test', 'Sophie', 'Bernard', 'RH', 'Responsable RH', $dg);
-        $manager = $make(User::ROLE_MANAGER, 'manager@entreprise.test', 'Thomas', 'Petit', 'IT', 'Chef de projet', $dg);
-        $make(User::ROLE_EMPLOYE, 'employe@entreprise.test', 'Lucas', 'Durand', 'IT', 'Développeur', $manager);
+        $dg = $make(User::ROLE_DIRECTION, 'direction@entreprise.test', 'Clarisse', 'Houngbédji', 'DG', 'Directeur général');
+        $rh = $make(User::ROLE_RH, 'rh@entreprise.test', 'Sylvie', 'Ahouansou', 'RH', 'Responsable RH', $dg);
+        $manager = $make(User::ROLE_MANAGER, 'manager@entreprise.test', 'Théodore', 'Dossou-Yovo', 'IT', 'Chef de projet', $dg);
+        $make(User::ROLE_EMPLOYE, 'employe@entreprise.test', 'Luc', 'Agbodjan', 'IT', 'Développeur', $manager);
 
         $departments['DG']->update(['manager_id' => $dg->id]);
         $departments['RH']->update(['manager_id' => $rh->id]);

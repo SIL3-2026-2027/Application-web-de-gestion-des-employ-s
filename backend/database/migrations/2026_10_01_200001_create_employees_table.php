@@ -20,8 +20,8 @@ return new class extends Migration
             $table->date('birth_date')->nullable();
             $table->string('birth_place')->nullable();
             $table->string('nationality')->nullable();
-            $table->text('social_security_number')->nullable(); // chiffré
-            $table->enum('marital_status', ['celibataire', 'marie', 'pacse', 'divorce', 'veuf'])->nullable();
+            $table->text('social_security_number')->nullable(); // numéro d'immatriculation CNSS, chiffré
+            $table->enum('marital_status', ['celibataire', 'marie', 'divorce', 'veuf'])->nullable();
             $table->unsignedTinyInteger('children_count')->default(0);
             $table->string('photo_path')->nullable();
 
@@ -31,10 +31,10 @@ return new class extends Migration
             $table->string('phone', 30)->nullable();
             $table->string('address')->nullable();
             $table->string('city')->nullable();
-            $table->string('postal_code', 10)->nullable();
+            $table->string('postal_code', 30)->nullable(); // boîte postale
             $table->string('emergency_contact_name')->nullable();
             $table->string('emergency_contact_phone', 30)->nullable();
-            $table->text('iban')->nullable(); // chiffré
+            $table->text('iban')->nullable(); // RIB / IBAN, chiffré
 
             // Poste
             $table->foreignId('department_id')->nullable()->constrained()->nullOnDelete();

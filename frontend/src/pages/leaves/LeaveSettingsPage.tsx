@@ -133,7 +133,7 @@ function Holidays() {
             ))}
           </Select>
           <Button variant="secondary" loading={generate.isPending} onClick={() => generate.mutate()}>
-            Jours fériés français
+            Jours fériés du Bénin
           </Button>
         </div>
       }

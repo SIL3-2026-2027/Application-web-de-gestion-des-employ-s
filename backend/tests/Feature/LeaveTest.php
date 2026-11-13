@@ -7,7 +7,7 @@ use App\Models\LeaveRequest;
 use App\Models\LeaveType;
 use App\Models\PublicHoliday;
 use App\Models\User;
-use App\Services\Leave\FrenchHolidays;
+use App\Services\Leave\BeninHolidays;
 use App\Services\Leave\LeaveBalanceService;
 use App\Services\Leave\WorkingDays;
 use Carbon\CarbonImmutable;
@@ -62,13 +62,19 @@ class LeaveTest extends TestCase
 
     // ---------- Calculs ----------
 
-    public function test_easter_and_french_holidays(): void
+    public function test_easter_and_benin_holidays(): void
     {
-        $this->assertSame('2026-04-05', FrenchHolidays::easterSunday(2026)->toDateString());
-        $this->assertSame('2027-03-28', FrenchHolidays::easterSunday(2027)->toDateString());
+        $this->assertSame('2026-04-05', BeninHolidays::easterSunday(2026)->toDateString());
+        $this->assertSame('2027-03-28', BeninHolidays::easterSunday(2027)->toDateString());
 
-        $holidays = FrenchHolidays::forYear(2026);
-        $this->assertCount(11, $holidays);
+        $holidays = BeninHolidays::forYear(2026);
+        $this->assertCount(13, $holidays); // 10 fêtes fixes ou chrétiennes + Ramadan, Tabaski, Maouloud
+        $this->assertSame('Fête des religions endogènes (Vodoun)', $holidays['2026-01-10']);
+        $this->assertSame('Fête nationale (Indépendance)', $holidays['2026-08-01']);
+        $this->assertStringContainsString('Tabaski', $holidays['2026-05-27']);
+        $this->assertArrayNotHasKey('2026-07-14', $holidays);
+        // Au-delà des années connues, seules les fêtes calculables sont proposées
+        $this->assertCount(10, BeninHolidays::forYear(2040));
         $this->assertSame('Lundi de Pâques', $holidays['2026-04-06']);
         $this->assertSame('Ascension', $holidays['2026-05-14']);
         $this->assertSame('Lundi de Pentecôte', $holidays['2026-05-25']);

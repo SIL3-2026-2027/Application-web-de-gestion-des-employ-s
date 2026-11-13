@@ -48,8 +48,28 @@ En production, ajouter au cron du serveur :
 ## Documents générés
 
 Les informations de l'entreprise imprimées sur les contrats et certificats se règlent dans
-`backend/.env` : `COMPANY_NAME`, `COMPANY_ADDRESS`, `COMPANY_POSTAL_CODE`, `COMPANY_CITY`,
-`COMPANY_SIRET`, `COMPANY_REPRESENTATIVE`, `COMPANY_REPRESENTATIVE_TITLE`.
+`backend/.env` : `COMPANY_NAME`, `COMPANY_ADDRESS`, `COMPANY_POSTAL_BOX`, `COMPANY_CITY`,
+`COMPANY_COUNTRY`, `COMPANY_IFU`, `COMPANY_RCCM`, `COMPANY_CNSS`, `COMPANY_REPRESENTATIVE`,
+`COMPANY_REPRESENTATIVE_TITLE`.
+
+## Préconfiguration : entreprise béninoise
+
+L'application est préréglée pour une entreprise installée au Bénin. Tout reste modifiable.
+
+| Domaine | Préréglage | Où le changer |
+|---|---|---|
+| Entreprise | IFU, RCCM, n° d'employeur CNSS, siège à Cotonou | `backend/.env` (`COMPANY_*`) |
+| Fuseau horaire | `Africa/Porto-Novo` (UTC+1) | `APP_TIMEZONE` |
+| Monnaie | Franc CFA (FCFA), sans décimales ; salaire de base **brut mensuel** | `HR_CURRENCY` |
+| Durée du travail | 40 heures par semaine, horaire type 8 h – 17 h | `HR_WEEKLY_HOURS`, écran Présences |
+| Heures supplémentaires | + 12 % de la 41e à la 48e heure, + 35 % au-delà (nuit, dimanche et jours fériés à saisir) | rubriques de paie |
+| Congés payés | 2 jours par mois, 24 jours par an ; permissions exceptionnelles 10 jours par an ; maternité, paternité | Paramètres congés |
+| Jours fériés | 1er et 10 janvier, lundi de Pâques, 1er mai, Ascension, lundi de Pentecôte, 1er août, 15 août, 1er novembre, 25 décembre, Ramadan, Tabaski, Maouloud | Paramètres congés |
+| Dossier employé | n° CNSS, RIB / IBAN, boîte postale, téléphone +229 | — |
+| Documents PDF | mentions du Code du travail (loi n° 98-004) et de la convention collective générale du travail | `backend/resources/views/pdf` |
+
+Les dates du Ramadan, de la Tabaski et du Maouloud dépendent de la lune : elles sont proposées à
+leur date prévisionnelle et doivent être corrigées chaque année d'après le communiqué officiel.
 
 ## Lancement en développement
 

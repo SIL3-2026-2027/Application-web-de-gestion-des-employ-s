@@ -7,7 +7,7 @@ import { useEmployeeOptions } from '../api/queries'
 import type { PayrollItem, PayrollPeriodDetail, PayrollRubric, RecurringPayItem } from '../api/types'
 import { MonthPicker } from '../components/attendance'
 import { Alert, Badge, Button, Card, Field, Input, Modal, PageHeader, Select, Spinner } from '../components/ui'
-import { formatDate, formatDateTime, toIsoDate } from '../lib/labels'
+import { formatDate, formatDateTime, formatMoney, toIsoDate } from '../lib/labels'
 
 type Tab = 'month' | 'recurring' | 'rubrics'
 
@@ -28,7 +28,7 @@ function formatItem(i: Pick<PayrollItem, 'quantity' | 'amount' | 'rubric'>): str
 }
 
 function money(value: number): string {
-  return value.toLocaleString('fr-FR', { style: 'currency', currency: 'EUR' })
+  return formatMoney(value)
 }
 
 function ItemModal({ month, employeeId, item, onClose }: { month: string; employeeId?: number; item?: PayrollItem; onClose: () => void }) {
@@ -96,8 +96,8 @@ function ItemModal({ month, employeeId, item, onClose }: { month: string; employ
           </Select>
         </Field>
         {rubric && rubric.unit === 'montant' && (
-          <Field label="Montant (€)" required error={errors.amount?.[0]}>
-            <Input type="number" step="0.01" min={0} value={form.amount} onChange={(e) => setForm({ ...form, amount: e.target.value })} />
+          <Field label="Montant (FCFA)" required error={errors.amount?.[0]}>
+            <Input type="number" step="1" min={0} value={form.amount} onChange={(e) => setForm({ ...form, amount: e.target.value })} />
           </Field>
         )}
         {rubric && rubric.unit !== 'montant' && (
@@ -474,8 +474,8 @@ function Recurring() {
                   ))}
               </Select>
             </Field>
-            <Field label="Montant mensuel (€)" required error={errors.amount?.[0]}>
-              <Input type="number" step="0.01" min={0} value={editing.amount} onChange={(e) => setEditing({ ...editing, amount: e.target.value })} />
+            <Field label="Montant mensuel (FCFA)" required error={errors.amount?.[0]}>
+              <Input type="number" step="1" min={0} value={editing.amount} onChange={(e) => setEditing({ ...editing, amount: e.target.value })} />
             </Field>
             <div className="grid grid-cols-2 gap-3">
               <Field label="À partir de" required error={errors.start_month?.[0]}>
@@ -533,7 +533,7 @@ function Rubrics() {
     >
       <p className="mb-3 text-sm text-slate-500">
         Le <strong>code d'export</strong> est celui de la rubrique dans votre logiciel de paie : il figure dans le fichier exporté. Les rubriques HS25, HS50 et ABS_NJ, ainsi que celles qui portent le
-        code d'un type de congé (CP, RTT, MAL…), sont alimentées automatiquement.
+        code d'un type de congé (CP, PERM, MAL…), sont alimentées automatiquement.
       </p>
       {remove.isError && <Alert>{errorMessage(remove.error)}</Alert>}
       {isLoading ? (
@@ -601,7 +601,7 @@ function Rubrics() {
               </Field>
               <Field label="Unité" required>
                 <Select value={editing.unit} onChange={(e) => setEditing({ ...editing, unit: e.target.value as PayrollRubric['unit'] })}>
-                  <option value="montant">Montant (€)</option>
+                  <option value="montant">Montant (FCFA)</option>
                   <option value="heures">Heures</option>
                   <option value="jours">Jours</option>
                 </Select>

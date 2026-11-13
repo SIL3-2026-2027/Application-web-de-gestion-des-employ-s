@@ -44,7 +44,7 @@ class PayrollTest extends TestCase
         $user = User::factory()->create();
         $user->assignRole(User::ROLE_EMPLOYE);
         $this->employee = Employee::factory()->create(['user_id' => $user->id, 'matricule' => 'EMP00042', 'hire_date' => '2024-01-01', 'status' => 'actif']);
-        Contract::create(['employee_id' => $this->employee->id, 'type' => 'CDI', 'start_date' => '2024-01-01', 'weekly_hours' => 35, 'base_salary' => 36000]);
+        Contract::create(['employee_id' => $this->employee->id, 'type' => 'CDI', 'start_date' => '2024-01-01', 'weekly_hours' => 40, 'base_salary' => 3000]);
 
         WorkSchedule::create([
             'name' => 'Standard', 'is_default' => true, 'late_tolerance' => 10,
@@ -53,7 +53,7 @@ class PayrollTest extends TestCase
 
         foreach ([
             ['PRIME_EXC', 'gain', 'montant', 'P100'], ['IND_TRANSPORT', 'gain', 'montant', 'P200'], ['ACOMPTE', 'retenue', 'montant', 'R100'],
-            ['HS25', 'gain', 'heures', 'H125'], ['HS50', 'gain', 'heures', 'H150'], ['ABS_NJ', 'retenue', 'jours', 'A900'], ['CP', 'information', 'jours', 'C100'],
+            ['HS12', 'gain', 'heures', 'H112'], ['HS35', 'gain', 'heures', 'H135'], ['ABS_NJ', 'retenue', 'jours', 'A900'], ['CP', 'information', 'jours', 'C100'],
         ] as [$code, $kind, $unit, $export]) {
             $this->rubrics[$code] = PayrollRubric::create(['code' => $code, 'label' => $code, 'kind' => $kind, 'unit' => $unit, 'export_code' => $export]);
         }
@@ -76,12 +76,12 @@ class PayrollTest extends TestCase
         $this->actingAs($this->rh)->getJson('/api/v1/payroll/periods/2026-13')->assertNotFound();
     }
 
-    public function test_overtime_split_25_50_by_week_including_week_across_months(): void
+    public function test_overtime_split_12_35_by_week_including_week_across_months(): void
     {
-        // Semaine du 28/09 au 04/10 : 6 h en septembre, puis 4 h le 01/10 → 2 h à 25 %, 2 h à 50 % en octobre
+        // Semaine du 28/09 au 04/10 : 6 h en septembre, puis 4 h le 01/10 → 2 h à 12 %, 2 h à 35 % en octobre
         $this->overtime('2026-09-29', 360);
         $this->overtime('2026-10-01', 240);
-        // Semaine du 12/10 : 9 h → 8 h à 25 %, 1 h à 50 %
+        // Semaine du 12/10 : 9 h → 8 h à 12 %, 1 h à 35 %
         $this->overtime('2026-10-12', 300);
         $this->overtime('2026-10-14', 240);
         // Non validées : ignorées
@@ -90,8 +90,8 @@ class PayrollTest extends TestCase
         $this->actingAs($this->rh)->postJson('/api/v1/payroll/periods/2026-10/prepare')->assertOk();
         $items = $this->items();
 
-        $this->assertSame(10.0, (float) $items['HS25']['quantity']); // 2 + 8
-        $this->assertSame(3.0, (float) $items['HS50']['quantity']);  // 2 + 1
+        $this->assertSame(10.0, (float) $items['HS12']['quantity']); // 2 + 8
+        $this->assertSame(3.0, (float) $items['HS35']['quantity']);  // 2 + 1
     }
 
     public function test_prepare_collects_recurring_leaves_and_absences_and_keeps_manual_items(): void
@@ -132,7 +132,7 @@ class PayrollTest extends TestCase
     {
         $url = '/api/v1/payroll/periods/2026-10/items';
         $this->actingAs($this->rh)->postJson($url, ['employee_id' => $this->employee->id, 'payroll_rubric_id' => $this->rubrics['ACOMPTE']->id])->assertJsonValidationErrors('amount');
-        $this->actingAs($this->rh)->postJson($url, ['employee_id' => $this->employee->id, 'payroll_rubric_id' => $this->rubrics['HS25']->id, 'amount' => 10])->assertJsonValidationErrors('quantity');
+        $this->actingAs($this->rh)->postJson($url, ['employee_id' => $this->employee->id, 'payroll_rubric_id' => $this->rubrics['HS12']->id, 'amount' => 10])->assertJsonValidationErrors('quantity');
     }
 
     public function test_editing_auto_item_makes_it_manual(): void
@@ -141,7 +141,7 @@ class PayrollTest extends TestCase
         $this->actingAs($this->rh)->postJson('/api/v1/payroll/periods/2026-10/prepare');
         $id = PayrollItem::first()->id;
 
-        $this->actingAs($this->rh)->putJson("/api/v1/payroll/items/{$id}", ['payroll_rubric_id' => $this->rubrics['HS25']->id, 'quantity' => 3, 'comment' => 'Ajusté'])
+        $this->actingAs($this->rh)->putJson("/api/v1/payroll/items/{$id}", ['payroll_rubric_id' => $this->rubrics['HS12']->id, 'quantity' => 3, 'comment' => 'Ajusté'])
             ->assertJsonPath('source', 'manuel');
         $this->actingAs($this->rh)->postJson('/api/v1/payroll/periods/2026-10/prepare');
 
@@ -181,11 +181,11 @@ class PayrollTest extends TestCase
         $this->assertStringContainsString('EMP00042', $csv);
         $this->assertStringContainsString(';P100;', $csv);
         $this->assertStringContainsString('150,5', $csv);    // virgule décimale
-        $this->assertStringContainsString(';H125;', $csv);
+        $this->assertStringContainsString(';H112;', $csv);
 
         $table = file_get_contents($this->actingAs($this->rh)->get('/api/v1/payroll/periods/2026-10/export?format=csv&layout=tableau')
             ->assertOk()->baseResponse->getFile()->getPathname());
-        $this->assertStringContainsString('HS25 (heures)', $table);
+        $this->assertStringContainsString('HS12 (heures)', $table);
         $this->assertStringContainsString('1,5', $table);
 
         $this->actingAs($this->rh)->get('/api/v1/payroll/periods/2026-10/export?format=xlsx&layout=lignes')->assertOk();
@@ -232,7 +232,7 @@ class PayrollTest extends TestCase
         $this->actingAs($this->rh)->postJson('/api/v1/payroll/rubrics', ['code' => 'PRIME_X', 'label' => 'Prime X', 'kind' => 'gain', 'unit' => 'montant', 'export_code' => 'P999'])->assertCreated();
 
         $this->actingAs($this->rh)->postJson('/api/v1/payroll/recurring', [
-            'employee_id' => $this->employee->id, 'payroll_rubric_id' => $this->rubrics['HS25']->id, 'amount' => 10, 'start_month' => '2026-10',
+            'employee_id' => $this->employee->id, 'payroll_rubric_id' => $this->rubrics['HS12']->id, 'amount' => 10, 'start_month' => '2026-10',
         ])->assertJsonValidationErrors('payroll_rubric_id'); // rubrique en heures : pas de récurrence en montant
 
         $this->actingAs($this->rh)->postJson('/api/v1/payroll/recurring', [

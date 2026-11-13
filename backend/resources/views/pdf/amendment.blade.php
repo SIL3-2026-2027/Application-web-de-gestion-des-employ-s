@@ -3,7 +3,7 @@
 @php
     $e = $contract->employee;
     $parent = $contract->contract;
-    $money = fn ($v) => number_format((float) $v, 2, ',', ' ').' €';
+    $money = fn ($v) => number_format((float) $v, 0, ',', ' ').' '.config('hr.currency');
 @endphp
 
 @section('title', 'Avenant '.$contract->reference)
@@ -30,7 +30,7 @@
             <tr><td>Nouvelle durée hebdomadaire</td><td>{{ rtrim(rtrim(number_format($contract->weekly_hours, 1, ',', ''), '0'), ',') }} heures</td></tr>
         @endif
         @if ($contract->base_salary)
-            <tr><td>Nouvelle rémunération brute annuelle</td><td>{{ $money($contract->base_salary) }}</td></tr>
+            <tr><td>Nouveau salaire brut mensuel</td><td>{{ $money($contract->base_salary) }}</td></tr>
         @endif
         @if ($contract->end_date)
             <tr><td>Nouvelle date de fin</td><td>{{ $contract->end_date->format('d/m/Y') }}</td></tr>

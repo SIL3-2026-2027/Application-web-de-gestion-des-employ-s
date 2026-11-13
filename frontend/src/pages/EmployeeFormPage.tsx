@@ -32,6 +32,7 @@ function toForm(e?: Employee): FormValues {
   if (!e) {
     values.status = 'periode_essai'
     values.children_count = '0'
+    values.nationality = 'Béninoise'
   }
   return values
 }
@@ -129,7 +130,7 @@ export default function EmployeeFormPage() {
       <Field label="Nationalité" error={err('nationality')}>
         <Input {...register('nationality')} />
       </Field>
-      <Field label="N° de sécurité sociale" error={err('social_security_number')}>
+      <Field label="N° d’immatriculation CNSS" error={err('social_security_number')}>
         <Input {...register('social_security_number')} />
       </Field>
       <Field label="Situation familiale" error={err('marital_status')}>
@@ -161,7 +162,7 @@ export default function EmployeeFormPage() {
       <Field label="Adresse" className="sm:col-span-2" error={err('address')}>
         <Input {...register('address')} />
       </Field>
-      <Field label="Code postal" error={err('postal_code')}>
+      <Field label="Boîte postale" error={err('postal_code')}>
         <Input {...register('postal_code')} />
       </Field>
       <Field label="Ville" error={err('city')}>
@@ -242,8 +243,8 @@ export default function EmployeeFormPage() {
     </div>,
 
     <div key="3" className="grid gap-4 sm:grid-cols-2">
-      <Field label="IBAN" className="sm:col-span-2" error={err('iban')}>
-        <Input {...register('iban')} placeholder="FR76 …" />
+      <Field label="RIB / IBAN" className="sm:col-span-2" error={err('iban')}>
+        <Input {...register('iban')} placeholder="BJ66 …" />
       </Field>
       <Field label="Contact d'urgence" error={err('emergency_contact_name')}>
         <Input {...register('emergency_contact_name')} />

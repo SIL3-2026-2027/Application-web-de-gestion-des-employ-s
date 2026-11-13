@@ -211,8 +211,8 @@ export default function OrganisationPage() {
             fields={[
               { name: 'title', label: 'Intitulé', required: true },
               { name: 'category', label: 'Catégorie' },
-              { name: 'min_salary', label: 'Salaire minimum (€ brut annuel)', type: 'number' },
-              { name: 'max_salary', label: 'Salaire maximum (€ brut annuel)', type: 'number' },
+              { name: 'min_salary', label: 'Salaire minimum (FCFA brut mensuel)', type: 'number' },
+              { name: 'max_salary', label: 'Salaire maximum (FCFA brut mensuel)', type: 'number' },
             ]}
             toValues={(p) => ({ title: s(p?.title), category: s(p?.category), min_salary: s(p?.min_salary), max_salary: s(p?.max_salary) })}
           />

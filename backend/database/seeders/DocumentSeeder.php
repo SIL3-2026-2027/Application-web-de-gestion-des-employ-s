@@ -16,7 +16,7 @@ class DocumentSeeder extends Seeder
     {
         $categories = collect([
             ['code' => 'IDENTITE', 'name' => "Pièce d'identité", 'has_expiry' => true],
-            ['code' => 'SEJOUR', 'name' => 'Titre de séjour', 'has_expiry' => true],
+            ['code' => 'SEJOUR', 'name' => 'Carte de séjour / permis de travail', 'has_expiry' => true],
             ['code' => 'DIPLOME', 'name' => 'Diplômes et certificats'],
             ['code' => 'PERMIS', 'name' => 'Permis de conduire', 'has_expiry' => true],
             ['code' => 'MEDICAL', 'name' => 'Visite médicale', 'has_expiry' => true],

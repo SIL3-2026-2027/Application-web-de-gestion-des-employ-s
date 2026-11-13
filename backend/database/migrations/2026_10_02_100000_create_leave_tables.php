@@ -15,7 +15,7 @@ return new class extends Migration
             $table->string('code', 20)->unique();
             $table->string('color', 7)->default('#2e75b6');
             $table->boolean('is_deductible')->default(true);      // décompté d'un solde
-            $table->decimal('monthly_accrual', 5, 2)->nullable(); // ex. 2,08 jours acquis par mois
+            $table->decimal('monthly_accrual', 5, 2)->nullable(); // ex. 2 jours acquis par mois
             $table->decimal('annual_allowance', 5, 2)->nullable(); // droits annuels (plafond ou forfait)
             $table->boolean('requires_attachment')->default(false);
             $table->boolean('requires_hr_approval')->default(false); // 2e niveau de validation

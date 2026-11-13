@@ -39,7 +39,7 @@ class EmployeeImportService
         'email_perso' => 'E-mail personnel',
         'telephone' => 'Téléphone',
         'adresse' => 'Adresse',
-        'code_postal' => 'Code postal',
+        'code_postal' => 'Boîte postale',
         'ville' => 'Ville',
         'departement' => 'Département (code ou nom)',
         'poste' => 'Poste',
@@ -50,7 +50,7 @@ class EmployeeImportService
         'type_contrat' => 'Type de contrat (CDI, CDD, stage, alternance, interim, freelance)',
         'date_fin_contrat' => 'Fin du contrat',
         'heures_hebdo' => 'Heures par semaine',
-        'salaire' => 'Salaire brut annuel',
+        'salaire' => 'Salaire brut mensuel (FCFA)',
     ];
 
     /** Références à créer pendant l'import (option « créer les éléments manquants »). */
@@ -160,7 +160,7 @@ class EmployeeImportService
                         'type' => $d['type_contrat'],
                         'start_date' => $d['date_embauche'],
                         'end_date' => $d['date_fin_contrat'],
-                        'weekly_hours' => $d['heures_hebdo'] ?? 35,
+                        'weekly_hours' => $d['heures_hebdo'] ?? config('hr.weekly_hours'),
                         'base_salary' => $d['salaire'],
                         'position_id' => $employee->position_id,
                         'department_id' => $employee->department_id,
@@ -385,7 +385,7 @@ class EmployeeImportService
             $d['type_contrat'] = $type;
 
             if ($d['salaire'] === null || ! is_numeric(str_replace([' ', ','], ['', '.'], (string) $d['salaire']))) {
-                $errors[] = 'Salaire brut annuel manquant ou invalide (obligatoire avec un type de contrat).';
+                $errors[] = 'Salaire brut mensuel manquant ou invalide (obligatoire avec un type de contrat).';
             } else {
                 $d['salaire'] = (float) str_replace([' ', ','], ['', '.'], (string) $d['salaire']);
             }

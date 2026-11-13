@@ -99,7 +99,7 @@ export default function EmployeeDetailPage() {
               <Info label="Nationalité" value={e.nationality} />
               <Info label="Situation familiale" value={e.marital_status ? maritalLabels[e.marital_status] : null} />
               <Info label="Enfants" value={String(e.children_count)} />
-              {'social_security_number' in e && <Info label="N° sécurité sociale" value={e.social_security_number} />}
+              {'social_security_number' in e && <Info label="N° CNSS" value={e.social_security_number} />}
             </dl>
           </Card>
           <Card title="Coordonnées">
@@ -110,7 +110,7 @@ export default function EmployeeDetailPage() {
               <Info label="Adresse" value={[e.address, [e.postal_code, e.city].filter(Boolean).join(' ')].filter(Boolean).join(', ')} />
               <Info label="Contact d'urgence" value={e.emergency_contact_name} />
               <Info label="Téléphone d'urgence" value={e.emergency_contact_phone} />
-              {'iban' in e && <Info label="IBAN" value={e.iban} />}
+              {'iban' in e && <Info label="RIB / IBAN" value={e.iban} />}
             </dl>
           </Card>
         </div>

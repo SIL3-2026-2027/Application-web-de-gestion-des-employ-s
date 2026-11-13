@@ -17,27 +17,29 @@ class PayrollSeeder extends Seeder
         $rubrics = collect([
             ['code' => 'PRIME_EXC', 'label' => 'Prime exceptionnelle', 'kind' => 'gain', 'unit' => 'montant', 'export_code' => 'P100'],
             ['code' => 'PRIME_FIXE', 'label' => 'Prime mensuelle fixe', 'kind' => 'gain', 'unit' => 'montant', 'export_code' => 'P110'],
-            ['code' => 'IND_TRANSPORT', 'label' => 'Prise en charge transport', 'kind' => 'gain', 'unit' => 'montant', 'export_code' => 'P200'],
-            ['code' => 'AVN_REPAS', 'label' => 'Avantage en nature repas', 'kind' => 'gain', 'unit' => 'montant', 'export_code' => 'P300'],
+            ['code' => 'IND_TRANSPORT', 'label' => 'Indemnité de transport', 'kind' => 'gain', 'unit' => 'montant', 'export_code' => 'P200'],
+            ['code' => 'IND_LOGEMENT', 'label' => 'Indemnité de logement', 'kind' => 'gain', 'unit' => 'montant', 'export_code' => 'P210'],
+            ['code' => 'PRIME_ANC', 'label' => 'Prime d’ancienneté', 'kind' => 'gain', 'unit' => 'montant', 'export_code' => 'P120'],
+            ['code' => 'HS_NUIT_FERIE', 'label' => 'Heures de nuit, dimanche et jours fériés (50 % / 100 %)', 'kind' => 'gain', 'unit' => 'heures', 'export_code' => 'H150'],
             ['code' => 'ACOMPTE', 'label' => 'Acompte sur salaire', 'kind' => 'retenue', 'unit' => 'montant', 'export_code' => 'R100'],
-            ['code' => PayrollRubric::OVERTIME_25, 'label' => 'Heures supplémentaires à 25 %', 'kind' => 'gain', 'unit' => 'heures', 'export_code' => 'H125'],
-            ['code' => PayrollRubric::OVERTIME_50, 'label' => 'Heures supplémentaires à 50 %', 'kind' => 'gain', 'unit' => 'heures', 'export_code' => 'H150'],
+            ['code' => PayrollRubric::OVERTIME_TIER_1, 'label' => 'Heures supplémentaires à 12 % (41e à 48e heure)', 'kind' => 'gain', 'unit' => 'heures', 'export_code' => 'H112'],
+            ['code' => PayrollRubric::OVERTIME_TIER_2, 'label' => 'Heures supplémentaires à 35 % (au-delà de la 48e heure)', 'kind' => 'gain', 'unit' => 'heures', 'export_code' => 'H135'],
             ['code' => PayrollRubric::UNJUSTIFIED_ABSENCE, 'label' => 'Absence non justifiée', 'kind' => 'retenue', 'unit' => 'jours', 'export_code' => 'A900'],
             // Même code que le type de congé : repris automatiquement depuis les congés approuvés
             ['code' => 'CP', 'label' => 'Congés payés pris', 'kind' => 'information', 'unit' => 'jours', 'export_code' => 'C100'],
-            ['code' => 'RTT', 'label' => 'RTT pris', 'kind' => 'information', 'unit' => 'jours', 'export_code' => 'C200'],
+            ['code' => 'PERM', 'label' => 'Permissions exceptionnelles', 'kind' => 'information', 'unit' => 'jours', 'export_code' => 'C200'],
             ['code' => 'MAL', 'label' => 'Absence maladie', 'kind' => 'information', 'unit' => 'jours', 'export_code' => 'A100'],
             ['code' => 'CSS', 'label' => 'Congé sans solde', 'kind' => 'retenue', 'unit' => 'jours', 'export_code' => 'A200'],
-            ['code' => 'MAT', 'label' => 'Congé maternité / paternité', 'kind' => 'information', 'unit' => 'jours', 'export_code' => 'A300'],
-            ['code' => 'EVF', 'label' => 'Événement familial', 'kind' => 'information', 'unit' => 'jours', 'export_code' => 'A400'],
+            ['code' => 'MAT', 'label' => 'Congé de maternité', 'kind' => 'information', 'unit' => 'jours', 'export_code' => 'A300'],
+            ['code' => 'PAT', 'label' => 'Congé de paternité', 'kind' => 'information', 'unit' => 'jours', 'export_code' => 'A400'],
         ])->mapWithKeys(fn ($r) => [$r['code'] => PayrollRubric::create($r)]);
 
         // Éléments récurrents de démonstration
         $month = now()->subMonths(3)->format('Y-m');
         foreach (Employee::where('status', '!=', 'sorti')->orderBy('id')->limit(6)->get() as $i => $e) {
-            RecurringPayItem::create(['employee_id' => $e->id, 'payroll_rubric_id' => $rubrics['IND_TRANSPORT']->id, 'amount' => 43.20, 'start_month' => $month, 'comment' => 'Pass Navigo (50 %)']);
+            RecurringPayItem::create(['employee_id' => $e->id, 'payroll_rubric_id' => $rubrics['IND_TRANSPORT']->id, 'amount' => 15000, 'start_month' => $month, 'comment' => 'Indemnité mensuelle de déplacement']);
             if ($i === 0) {
-                RecurringPayItem::create(['employee_id' => $e->id, 'payroll_rubric_id' => $rubrics['PRIME_FIXE']->id, 'amount' => 300, 'start_month' => $month, 'comment' => 'Prime de fonction']);
+                RecurringPayItem::create(['employee_id' => $e->id, 'payroll_rubric_id' => $rubrics['PRIME_FIXE']->id, 'amount' => 50000, 'start_month' => $month, 'comment' => 'Prime de fonction']);
             }
         }
 

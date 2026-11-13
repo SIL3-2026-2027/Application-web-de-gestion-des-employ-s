@@ -25,7 +25,6 @@ export const roleLabels: Record<Role, string> = {
 export const maritalLabels: Record<string, string> = {
   celibataire: 'Célibataire',
   marie: 'Marié(e)',
-  pacse: 'Pacsé(e)',
   divorce: 'Divorcé(e)',
   veuf: 'Veuf / veuve',
 }
@@ -46,7 +45,7 @@ export const fieldLabels: Record<string, string> = {
   phone: 'Téléphone',
   address: 'Adresse',
   city: 'Ville',
-  postal_code: 'Code postal',
+  postal_code: 'Boîte postale',
   emergency_contact_name: "Contact d'urgence",
   emergency_contact_phone: "Téléphone d'urgence",
   department_id: 'Département',
@@ -118,7 +117,7 @@ export const contractTypeLabels: Record<ContractType, string> = {
   CDI: 'CDI',
   CDD: 'CDD',
   stage: 'Stage',
-  alternance: 'Alternance',
+  alternance: 'Apprentissage',
   interim: 'Intérim',
   freelance: 'Freelance',
 }
@@ -134,16 +133,22 @@ export const endReasonLabels: Record<string, string> = {
   demission: 'Démission',
   licenciement: 'Licenciement',
   fin_cdd: 'Fin de CDD',
-  rupture_conventionnelle: 'Rupture conventionnelle',
+  rupture_conventionnelle: 'Rupture d’un commun accord',
   retraite: 'Départ à la retraite',
   fin_periode_essai: "Rupture de la période d'essai",
   fin_stage: 'Fin de stage',
   autre: 'Autre',
 }
 
+/** Monnaie de l'entreprise : franc CFA (UEMOA), sans décimales. */
+export const CURRENCY = 'FCFA'
+
+/** Durée légale hebdomadaire du travail au Bénin, proposée par défaut dans les contrats. */
+export const LEGAL_WEEKLY_HOURS = 40
+
 export function formatMoney(value: number | null | undefined): string {
   if (value === null || value === undefined) return '—'
-  return value.toLocaleString('fr-FR', { style: 'currency', currency: 'EUR', maximumFractionDigits: 0 })
+  return `${Math.round(value).toLocaleString('fr-FR')} ${CURRENCY}`
 }
 
 /** « 245 Ko », « 1,2 Mo » */

@@ -3,7 +3,7 @@
 @php
     $e = $employee;
     $isFemale = $e->civility === 'Mme';
-    $money = fn ($v) => number_format((float) $v, 2, ',', ' ').' €';
+    $money = fn ($v) => number_format((float) $v, 0, ',', ' ').' '.config('hr.currency');
     $position = \App\Models\Position::find($terms['position_id'])?->title ?? $e->position?->title;
 @endphp
 
@@ -15,8 +15,8 @@
 
     <p>
         Je soussigné(e), {{ $company['representative'] }}, {{ $company['representative_title'] }} de la société
-        <strong>{{ $company['name'] }}</strong>, {{ $company['address'] }}, {{ $company['postal_code'] }} {{ $company['city'] }},
-        SIRET {{ $company['siret'] }}, atteste que :
+        <strong>{{ $company['name'] }}</strong>, {{ $company['address'] }}, {{ $company['postal_box'] }} {{ $company['city'] }} ({{ $company['country'] }}),
+        IFU {{ $company['ifu'] }}, RCCM {{ $company['rccm'] }}, atteste que :
     </p>
 
     <p style="text-align:center; font-size:12pt;">
@@ -29,8 +29,8 @@
     </p>
 
     <table class="terms">
-        <tr><td>Rémunération brute annuelle</td><td>{{ $money($terms['base_salary']) }}</td></tr>
-        <tr><td>Soit, par mois (12 mensualités)</td><td>{{ $money($terms['base_salary'] / 12) }} brut</td></tr>
+        <tr><td>Salaire brut mensuel</td><td>{{ $money($terms['base_salary']) }}</td></tr>
+        <tr><td>Soit, par an (12 mois)</td><td>{{ $money($terms['base_salary'] * 12) }} brut</td></tr>
         @if ($terms['weekly_hours'])
             <tr><td>Durée hebdomadaire de travail</td><td>{{ rtrim(rtrim(number_format($terms['weekly_hours'], 1, ',', ''), '0'), ',') }} heures</td></tr>
         @endif

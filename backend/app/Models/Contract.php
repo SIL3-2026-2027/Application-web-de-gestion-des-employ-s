@@ -23,7 +23,7 @@ class Contract extends Model
         'demission' => 'Démission',
         'licenciement' => 'Licenciement',
         'fin_cdd' => 'Fin de CDD',
-        'rupture_conventionnelle' => 'Rupture conventionnelle',
+        'rupture_conventionnelle' => 'Rupture d’un commun accord',
         'retraite' => 'Départ à la retraite',
         'fin_periode_essai' => "Rupture de la période d'essai",
         'fin_stage' => 'Fin de stage',

@@ -12,6 +12,7 @@ import {
   contractTypeLabels,
   endReasonLabels,
   formatDate,
+  LEGAL_WEEKLY_HOURS,
   formatMoney,
 } from '../lib/labels'
 import { Alert, Badge, Button, Card, Field, Input, Modal, Select, Spinner } from './ui'
@@ -157,7 +158,7 @@ function ContractCard({ contract: c, canManage, onEdit, onAmend, onEnd }: { cont
         <Term label="Poste actuel" value={c.current_terms.position} />
         <Term label="Département" value={c.current_terms.department} />
         <Term label="Durée hebdo." value={c.current_terms.weekly_hours ? `${c.current_terms.weekly_hours} h` : '—'} />
-        {salary !== undefined && <Term label="Salaire brut annuel" value={formatMoney(salary)} />}
+        {salary !== undefined && <Term label="Salaire brut mensuel" value={formatMoney(salary)} />}
       </dl>
       {c.description && <p className="mt-3 text-sm text-slate-600">{c.description}</p>}
       {c.end_notes && <p className="mt-2 text-sm text-slate-500">Note de fin : {c.end_notes}</p>}
@@ -253,7 +254,7 @@ function ContractFormModal({ employee, contract, onClose }: { employee: Employee
     start_date: contract?.start_date ?? employee.hire_date,
     end_date: contract?.end_date ?? '',
     trial_end_date: contract?.trial_end_date ?? '',
-    weekly_hours: String(contract?.weekly_hours ?? 35),
+    weekly_hours: String(contract?.weekly_hours ?? LEGAL_WEEKLY_HOURS),
     base_salary: contract?.base_salary !== undefined ? String(contract.base_salary) : '',
     position_id: String(contract?.position?.id ?? employee.position_id ?? ''),
     department_id: String(contract?.department?.id ?? employee.department_id ?? ''),
@@ -294,7 +295,7 @@ function ContractFormModal({ employee, contract, onClose }: { employee: Employee
           </Select>
         </Field>
         <Field label="Convention collective" error={errors.collective_agreement?.[0]}>
-          <Input value={form.collective_agreement} onChange={(e) => set({ collective_agreement: e.target.value })} placeholder="ex. Syntec (IDCC 1486)" />
+          <Input value={form.collective_agreement} onChange={(e) => set({ collective_agreement: e.target.value })} placeholder="ex. Convention collective générale du travail" />
         </Field>
         <Field label="Date de début" required error={errors.start_date?.[0]}>
           <Input type="date" value={form.start_date} onChange={(e) => set({ start_date: e.target.value })} />
@@ -308,8 +309,8 @@ function ContractFormModal({ employee, contract, onClose }: { employee: Employee
         <Field label="Durée hebdomadaire (h)" required error={errors.weekly_hours?.[0]}>
           <Input type="number" step="0.5" value={form.weekly_hours} onChange={(e) => set({ weekly_hours: e.target.value })} />
         </Field>
-        <Field label="Salaire brut annuel (€)" required error={errors.base_salary?.[0]}>
-          <Input type="number" step="100" value={form.base_salary} onChange={(e) => set({ base_salary: e.target.value })} />
+        <Field label="Salaire brut mensuel (FCFA)" required error={errors.base_salary?.[0]}>
+          <Input type="number" step="1000" value={form.base_salary} onChange={(e) => set({ base_salary: e.target.value })} />
         </Field>
         <Field label="Poste" error={errors.position_id?.[0]}>
           <Select value={form.position_id} onChange={(e) => set({ position_id: e.target.value })}>
@@ -382,8 +383,8 @@ function AmendmentModal({ contract, onClose }: { contract: Contract; onClose: ()
         <Field label="Date d'effet" required error={errors.start_date?.[0]}>
           <Input type="date" value={form.start_date} onChange={(e) => set({ start_date: e.target.value })} />
         </Field>
-        <Field label={`Nouveau salaire brut annuel (actuel : ${formatMoney(contract.current_terms.base_salary)})`} error={errors.base_salary?.[0]}>
-          <Input type="number" step="100" value={form.base_salary} onChange={(e) => set({ base_salary: e.target.value })} />
+        <Field label={`Nouveau salaire brut mensuel (actuel : ${formatMoney(contract.current_terms.base_salary)})`} error={errors.base_salary?.[0]}>
+          <Input type="number" step="1000" value={form.base_salary} onChange={(e) => set({ base_salary: e.target.value })} />
         </Field>
         <Field label={`Nouvelle durée hebdo. (actuelle : ${contract.current_terms.weekly_hours} h)`} error={errors.weekly_hours?.[0]}>
           <Input type="number" step="0.5" value={form.weekly_hours} onChange={(e) => set({ weekly_hours: e.target.value })} />
